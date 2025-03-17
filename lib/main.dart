@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SizeConfig.init(context); // Initialize once at app start
     return MaterialApp(
+      debugShowCheckedModeBanner: true,
       title: 'Messanger App',
       theme: AppTheme.lightTheme,
       home: const LoginScreen(),

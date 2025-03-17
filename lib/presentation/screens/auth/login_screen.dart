@@ -1,8 +1,11 @@
+import 'package:email_validator/email_validator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:real_chat_app/config/helper/app_helper.dart';
 import 'package:real_chat_app/core/common/custom_button.dart';
 import 'package:real_chat_app/core/common/custom_textfield.dart';
+import 'package:real_chat_app/presentation/screens/auth/sign_up_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,6 +18,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -22,14 +27,37 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  final _emailFocus = FocusNode();
+  final _passwordFocus = FocusNode();
+
+
+  //email validator
+  String? _emailValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Please enter email";
+    } else if (!EmailValidator.validate(value.trim())) {
+      return "Please enter a valid email";
+    }
+    return null;
+  }
+
+  //password validator
+  String? _passwordValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Please enter password";
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding:
-              EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.05),
-          child: Form(
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            padding:
+                EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.05),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -60,7 +88,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   prefexIcon: const Icon(Icons.email_outlined),
                   controller: _emailController,
                   hintText: "Email",
+                  focusNode: _emailFocus,
                   keyBoardType: TextInputType.text,
+                  validator: _emailValidator
                 ),
 
                 //17
@@ -68,12 +98,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 //Custom Textfiled for password
                 CustomTextfield(
+                  isPassword: true,
                   sufixIcon: const Icon(Icons.visibility),
                   prefexIcon: const Icon(Icons.lock_outline),
                   controller: _passwordController,
                   hintText: "Password",
-                  obsecureText: true,
+                  focusNode: _passwordFocus,
                   keyBoardType: TextInputType.text,
+                  validator: _passwordValidator
                 ),
 
                 //17
@@ -95,7 +127,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: SizeConfig.screenHeight * 0.03),
 
                 //Login Button
-                CustomButton(onPressed: () {}, text: "Login"),
+                CustomButton(onPressed: () {
+                   if (_formKey.currentState!.validate()){
+                      debugPrint("Login Sucess");
+                   }
+                }, text: "Login"),
 
                 SizedBox(height: SizeConfig.screenHeight * 0.04),
 
@@ -110,7 +146,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                       children: [
                         TextSpan(
-                          recognizer: TapGestureRecognizer(),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) => const SignUpScreen(),
+                                ),
+                              );
+                            },
                           text: "Sign Up",
                           style: Theme.of(context)
                               .textTheme
