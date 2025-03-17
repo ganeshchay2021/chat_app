@@ -41,7 +41,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String? _nameValidator(String? value) {
     if (value == null || value.isEmpty) {
       return "Please enter Full Name";
-    } else if (value.length <6) {
+    } else if (value.length < 6) {
       return "Please enter Full Name";
     }
     return null;
@@ -71,41 +71,48 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String? _phonenumberValidator(String? value) {
     if (value == null || value.isEmpty) {
       return "Please enter phonenumber";
-    } else if (value.length < 10) {
-      return "Please enter valid phonenumber";
     }
-    return null;
+    final phoneRegex = RegExp(r'^\+?[\d\s-]{10,}$');
+
+    if (value.length != 10) {
+      return "Please enter 10 digit phonenumber";
+    } else {
+      if (phoneRegex.hasMatch(value)) {
+        return null;
+      } else {
+        return "Please enter valid phonenumber";
+      }
+    }
   }
 
   //password validator
- String? _passwordValidator(String? value) {
-  if (value == null || value.isEmpty) {
-    return 'Please enter a password';
+  String? _passwordValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter a password';
+    }
+
+    // Check length
+    if (value.length < 8) {
+      return 'Password must be at least 8 characters long';
+    }
+
+    // Check for at least one uppercase letter
+    if (!RegExp(r'[A-Z]').hasMatch(value)) {
+      return 'Password must have at least one uppercase letter';
+    }
+
+    // Check for at least one special character
+    if (!RegExp(r'[!@#\$&*~%^(),.?":{}|<>]').hasMatch(value)) {
+      return 'Password must have at least one special character';
+    }
+
+    // Check for at least one digit
+    if (!RegExp(r'[0-9]').hasMatch(value)) {
+      return 'Password must have at least one number';
+    }
+
+    return null; // Password is valid
   }
-
-  // Check length
-  if (value.length < 8) {
-    return 'Password must be at least 8 characters long';
-  }
-
-  // Check for at least one uppercase letter
-  if (!RegExp(r'[A-Z]').hasMatch(value)) {
-    return 'Password must have at least one uppercase letter';
-  }
-
-  // Check for at least one special character
-  if (!RegExp(r'[!@#\$&*~%^(),.?":{}|<>]').hasMatch(value)) {
-    return 'Password must have at least one special character';
-  }
-
-  // Check for at least one digit
-  if (!RegExp(r'[0-9]').hasMatch(value)) {
-    return 'Password must have at least one number';
-  }
-
-  return null; // Password is valid
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +163,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 //Custom Textfiled for username
                 CustomTextfield(
-                   focusNode: _usernameFocus,
+                  focusNode: _usernameFocus,
                   validator: _usernameValidator,
                   prefexIcon: const Icon(Icons.alternate_email_outlined),
                   controller: _usernameController,
@@ -168,31 +175,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 //Custom Textfiled for email
                 CustomTextfield(
-                   focusNode: _emailFocus,
+                  focusNode: _emailFocus,
                   validator: _emailValidator,
                   prefexIcon: const Icon(Icons.email_outlined),
                   controller: _emailController,
                   hintText: "Email",
-                  keyBoardType: TextInputType.text,
+                  keyBoardType: TextInputType.emailAddress,
                 ),
 
                 SizedBox(height: SizeConfig.screenHeight * 0.02),
 
                 //Custom Textfiled for phonenumber
                 CustomTextfield(
-                   focusNode: _phoneFocus,
+                  focusNode: _phoneFocus,
                   validator: _phonenumberValidator,
                   prefexIcon: const Icon(Icons.phone_outlined),
                   controller: _phoneController,
                   hintText: "Phonenumber",
-                  keyBoardType: TextInputType.phone,
+                  keyBoardType: TextInputType.number,
                 ),
 
                 SizedBox(height: SizeConfig.screenHeight * 0.02),
 
                 //Custom Textfiled for password
                 CustomTextfield(
-                   focusNode: _passwordFocus,
+                  focusNode: _passwordFocus,
                   validator: _passwordValidator,
                   prefexIcon: const Icon(Icons.lock_outline),
                   sufixIcon: const Icon(Icons.visibility),

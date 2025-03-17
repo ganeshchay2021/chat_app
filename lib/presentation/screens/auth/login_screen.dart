@@ -30,7 +30,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailFocus = FocusNode();
   final _passwordFocus = FocusNode();
 
-
   //email validator
   String? _emailValidator(String? value) {
     if (value == null || value.isEmpty) {
@@ -53,122 +52,132 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            padding:
-                EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.05),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                //30
-                SizedBox(height: SizeConfig.screenHeight * 0.055),
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.screenWidth * 0.05),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //30
+                  SizedBox(height: SizeConfig.screenHeight * 0.055),
 
-                //Welcome Text
-                Text("Welcome Back",
-                    style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                          fontWeight: FontWeight.bold,
-                        )),
-                //10
-                SizedBox(height: SizeConfig.screenHeight * 0.01),
+                  //Welcome Text
+                  Text("Welcome Back",
+                      style:
+                          Theme.of(context).textTheme.headlineMedium!.copyWith(
+                                fontWeight: FontWeight.bold,
+                              )),
+                  //10
+                  SizedBox(height: SizeConfig.screenHeight * 0.01),
 
-                //Continue text
-                Text(
-                  "Sign in to continue",
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                ),
+                  //Continue text
+                  Text(
+                    "Sign in to continue",
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                  ),
 
-                //30
-                SizedBox(height: SizeConfig.screenHeight * 0.035),
+                  //30
+                  SizedBox(height: SizeConfig.screenHeight * 0.035),
 
-                //Custom TextField for Email
-                CustomTextfield(
-                  prefexIcon: const Icon(Icons.email_outlined),
-                  controller: _emailController,
-                  hintText: "Email",
-                  focusNode: _emailFocus,
-                  keyBoardType: TextInputType.text,
-                  validator: _emailValidator
-                ),
+                  //Custom TextField for Email
+                  CustomTextfield(
+                      prefexIcon: const Icon(Icons.email_outlined),
+                      controller: _emailController,
+                      hintText: "Email",
+                      focusNode: _emailFocus,
+                      keyBoardType: TextInputType.text,
+                      validator: _emailValidator),
 
-                //17
-                SizedBox(height: SizeConfig.screenHeight * 0.02),
+                  //17
+                  SizedBox(height: SizeConfig.screenHeight * 0.02),
 
-                //Custom Textfiled for password
-                CustomTextfield(
-                  isPassword: true,
-                  sufixIcon: const Icon(Icons.visibility),
-                  prefexIcon: const Icon(Icons.lock_outline),
-                  controller: _passwordController,
-                  hintText: "Password",
-                  focusNode: _passwordFocus,
-                  keyBoardType: TextInputType.text,
-                  validator: _passwordValidator
-                ),
+                  //Custom Textfiled for password
+                  CustomTextfield(
+                      isPassword: true,
+                      sufixIcon: const Icon(Icons.visibility),
+                      prefexIcon: const Icon(Icons.lock_outline),
+                      controller: _passwordController,
+                      hintText: "Password",
+                      focusNode: _passwordFocus,
+                      keyBoardType: TextInputType.text,
+                      validator: _passwordValidator),
 
-                //17
-                SizedBox(height: SizeConfig.screenHeight * 0.03),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        recognizer: TapGestureRecognizer(),
-                        text: "Forgot Password?",
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: SizeConfig.screenHeight * 0.03),
-
-                //Login Button
-                CustomButton(onPressed: () {
-                   if (_formKey.currentState!.validate()){
-                      debugPrint("Login Sucess");
-                   }
-                }, text: "Login"),
-
-                SizedBox(height: SizeConfig.screenHeight * 0.04),
-
-                //Signup text buttoon
-                Center(
-                  child: RichText(
-                    text: TextSpan(
-                      text: "Don't have an account? ",
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: Theme.of(context).colorScheme.secondary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                      children: [
-                        TextSpan(
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                  builder: (context) => const SignUpScreen(),
-                                ),
-                              );
-                            },
-                          text: "Sign Up",
+                  //17
+                  SizedBox(height: SizeConfig.screenHeight * 0.03),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          recognizer: TapGestureRecognizer(),
+                          text: "Forgot Password?",
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium!
                               .copyWith(
                                 color: Theme.of(context).colorScheme.primary,
-                                fontWeight: FontWeight.bold,
                               ),
-                        )
-                      ],
-                    ),
+                        ),
+                      ),
+                    ],
                   ),
-                )
-              ],
+                  SizedBox(height: SizeConfig.screenHeight * 0.03),
+
+                  //Login Button
+                  CustomButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          debugPrint("Login Sucess");
+                        }
+                        FocusScope.of(context).unfocus();
+                      },
+                      text: "Login"),
+
+                  SizedBox(height: SizeConfig.screenHeight * 0.04),
+
+                  //Signup text buttoon
+                  Center(
+                    child: RichText(
+                      text: TextSpan(
+                        text: "Don't have an account? ",
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: Theme.of(context).colorScheme.secondary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                        children: [
+                          TextSpan(
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) => const SignUpScreen(),
+                                  ),
+                                );
+                              },
+                            text: "Sign Up",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
