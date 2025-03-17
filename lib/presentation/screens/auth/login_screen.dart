@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:real_chat_app/config/helper/app_helper.dart';
 import 'package:real_chat_app/core/common/custom_button.dart';
 import 'package:real_chat_app/core/common/custom_textfield.dart';
+import 'package:real_chat_app/data/services/service_locator.dart';
 import 'package:real_chat_app/presentation/screens/auth/sign_up_screen.dart';
+import 'package:real_chat_app/router/app_router.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -156,11 +158,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           TextSpan(
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                Navigator.push(
-                                  context,
-                                  CupertinoPageRoute(
-                                    builder: (context) => const SignUpScreen(),
-                                  ),
+                                getIt<AppRouter>().push(
+                                  const SignUpScreen(),
                                 );
                               },
                             text: "Sign Up",

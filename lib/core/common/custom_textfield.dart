@@ -28,7 +28,7 @@ class CustomTextfield extends StatefulWidget {
 }
 
 class _CustomTextfieldState extends State<CustomTextfield> {
-  bool obsecureText = false;
+  bool obsecureText = true;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -47,8 +47,8 @@ class _CustomTextfieldState extends State<CustomTextfield> {
                   });
                 },
                 icon: obsecureText
-                    ? const Icon(Icons.visibility_off)
-                    : const Icon(Icons.visibility))
+                    ? const Icon(Icons.visibility)
+                    : const Icon(Icons.visibility_off))
             : null,
       ),
     );

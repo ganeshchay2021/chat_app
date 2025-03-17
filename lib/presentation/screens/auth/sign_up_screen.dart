@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:real_chat_app/config/helper/app_helper.dart';
 import 'package:real_chat_app/core/common/custom_button.dart';
 import 'package:real_chat_app/core/common/custom_textfield.dart';
+import 'package:real_chat_app/data/services/service_locator.dart';
+import 'package:real_chat_app/router/app_router.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -199,6 +201,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 //Custom Textfiled for password
                 CustomTextfield(
+                  isPassword: true,
                   focusNode: _passwordFocus,
                   validator: _passwordValidator,
                   prefexIcon: const Icon(Icons.lock_outline),
@@ -235,7 +238,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         TextSpan(
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              Navigator.pop(context);
+                              getIt<AppRouter>().pop();
                             },
                           text: "Login",
                           style: Theme.of(context)
