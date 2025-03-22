@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:real_chat_app/config/helper/app_helper.dart';
 
 class AppTheme {
   // Define the primary color
@@ -22,25 +23,25 @@ class AppTheme {
     ),
 
     // AppBar Theme
-    appBarTheme: const AppBarTheme(
+    appBarTheme: AppBarTheme(
       backgroundColor: Colors.white,
       elevation: 0,
       centerTitle: false,
       titleTextStyle: TextStyle(
         color: Colors.black,
-        fontSize: 18,
+        fontSize: SizeConfig.screenHeight * 0.02,
         fontWeight: FontWeight.w600,
       ),
-      iconTheme: IconThemeData(color: Colors.black),
+      iconTheme: const IconThemeData(color: Colors.black),
     ),
 
     // Input Decoration
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: primaryColor.withOpacity(0.1),
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 8,
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.screenWidth * 0.02,
+        vertical: SizeConfig.screenHeight * 0.01,
       ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(24),
@@ -56,7 +57,7 @@ class AppTheme {
       ),
       hintStyle: TextStyle(
         color: Colors.grey[600],
-        fontSize: 14,
+        fontSize: SizeConfig.screenHeight * 0.017,
       ),
     ),
 
@@ -70,9 +71,9 @@ class AppTheme {
     ),
 
     // Icons
-    iconTheme: const IconThemeData(
+    iconTheme: IconThemeData(
       color: Colors.black87,
-      size: 24,
+      size:  SizeConfig.screenWidth*0.06,
     ),
 
     // Text Themes
@@ -84,12 +85,13 @@ class AppTheme {
         backgroundColor: primaryColor,
         foregroundColor: Colors.black87,
         elevation: 0,
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding:
+            EdgeInsets.symmetric(vertical: SizeConfig.screenHeight * 0.019),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        textStyle: const TextStyle(
-          fontSize: 16,
+        textStyle: TextStyle(
+          fontSize: SizeConfig.screenHeight * 0.019,
           fontWeight: FontWeight.w600,
         ),
       ),

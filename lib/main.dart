@@ -7,9 +7,7 @@ import 'config/helper/app_helper.dart';
 
 void main() async {
   await setupServiceLocator();
-  runApp(
-    const MyApp(),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

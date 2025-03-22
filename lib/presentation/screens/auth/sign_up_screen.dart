@@ -218,7 +218,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 CustomButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        debugPrint("SIgnup Sucess");
+                        debugPrint("Signup Sucess");
                       }
                     },
                     text: "Create Account"),
