@@ -1,5 +1,4 @@
 import 'package:email_validator/email_validator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:real_chat_app/config/helper/app_helper.dart';
@@ -119,7 +118,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       RichText(
                         text: TextSpan(
-                          recognizer: TapGestureRecognizer(),
+                          recognizer: TapGestureRecognizer()..onTap=(){
+
+                          },
                           text: "Forgot Password?",
                           style: Theme.of(context)
                               .textTheme

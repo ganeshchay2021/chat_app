@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:real_chat_app/config/helper/app_helper.dart';
 import 'package:real_chat_app/core/common/custom_button.dart';
 import 'package:real_chat_app/core/common/custom_textfield.dart';
+import 'package:real_chat_app/data/repository/auth_repository.dart';
 import 'package:real_chat_app/data/services/service_locator.dart';
 import 'package:real_chat_app/router/app_router.dart';
 
@@ -15,7 +16,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -32,7 +33,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   void dispose() {
     _emailController.dispose();
-    _nameController.dispose();
+    _fullNameController.dispose();
     _usernameController.dispose();
     _phoneController.dispose();
     _passwordController.dispose();
@@ -53,8 +54,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String? _usernameValidator(String? value) {
     if (value == null || value.isEmpty) {
       return "Please enter username";
-    } else if (value.length >= 10) {
-      return "Please enter valid username";
+    } else if (value.length > 10) {
+      return "Username must not exceeds 10 characters";
     }
     return null;
   }
@@ -76,15 +77,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
     final phoneRegex = RegExp(r'^\+?[\d\s-]{10,}$');
 
-    if (value.length != 10) {
-      return "Please enter 10 digit phonenumber";
+    if (phoneRegex.hasMatch(value)) {
+      return null;
     } else {
-      if (phoneRegex.hasMatch(value)) {
-        return null;
-      } else {
-        return "Please enter valid phonenumber";
-      }
+      return "Please enter valid phonenumber";
     }
+    // if (value.length != 10) {
+    //   return "Please enter 10 digit phonenumber";
+    // } else {
+
+    // }
   }
 
   //password validator
@@ -114,6 +116,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
 
     return null; // Password is valid
+  }
+
+  //handle signup
+
+  void handleSignUp() {
+    if (_formKey.currentState!.validate()) {
+      try {
+        getIt<AuthRepository>().signUp(
+            fullName: _fullNameController.text,
+            userName: _usernameController.text,
+            email: _emailController.text,
+            phoneNumber: _phoneController.text,
+            password: _passwordController.text);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              e.toString(),
+            ),
+          ),
+        );
+      }
+    } else {
+      debugPrint("Form validation failed");
+    }
   }
 
   @override
@@ -155,7 +182,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   focusNode: _nameFocus,
                   validator: _nameValidator,
                   prefexIcon: const Icon(Icons.person_outline),
-                  controller: _nameController,
+                  controller: _fullNameController,
                   hintText: "Full Name",
                   keyBoardType: TextInputType.text,
                 ),
@@ -214,14 +241,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 //17
                 SizedBox(height: SizeConfig.screenHeight * 0.035),
 
-                //Login Button
-                CustomButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        debugPrint("Signup Sucess");
-                      }
-                    },
-                    text: "Create Account"),
+                //signup Button
+                CustomButton(onPressed: handleSignUp, text: "Create Account"),
 
                 SizedBox(height: SizeConfig.screenHeight * 0.045),
 

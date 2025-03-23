@@ -33,7 +33,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,
-      obscureText: obsecureText,
+      obscureText: widget.isPassword? obsecureText: !obsecureText,
       validator: widget.validator,
       focusNode: widget.focusNode,
       decoration: InputDecoration(
