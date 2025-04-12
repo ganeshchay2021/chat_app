@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:real_chat_app/data/repository/auth_repository.dart';
+import 'package:real_chat_app/logic/cubit/auth/auth_cubit.dart';
 import 'package:real_chat_app/router/app_router.dart';
 
 import '../../firebase_options.dart';
@@ -28,4 +29,11 @@ Future<void> setupServiceLocator() async {
 
   //register Auth Repository
   getIt.registerLazySingleton(() => AuthRepository());
+
+  //register Auth Cubit
+  getIt.registerFactory(
+    () => AuthCubit(
+      authRepository: AuthRepository(),
+    ),
+  );
 }

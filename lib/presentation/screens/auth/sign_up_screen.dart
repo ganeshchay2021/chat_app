@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:real_chat_app/config/helper/app_helper.dart';
 import 'package:real_chat_app/core/common/custom_button.dart';
 import 'package:real_chat_app/core/common/custom_textfield.dart';
-import 'package:real_chat_app/data/repository/auth_repository.dart';
 import 'package:real_chat_app/data/services/service_locator.dart';
+import 'package:real_chat_app/logic/cubit/auth/auth_cubit.dart';
 import 'package:real_chat_app/router/app_router.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -123,7 +123,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void handleSignUp() {
     if (_formKey.currentState!.validate()) {
       try {
-        getIt<AuthRepository>().signUp(
+        getIt<AuthCubit>().signUp(
             fullName: _fullNameController.text,
             userName: _usernameController.text,
             email: _emailController.text,

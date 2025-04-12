@@ -1,12 +1,18 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:real_chat_app/config/helper/app_helper.dart';
 import 'package:real_chat_app/core/common/custom_button.dart';
 import 'package:real_chat_app/core/common/custom_textfield.dart';
 import 'package:real_chat_app/data/services/service_locator.dart';
+import 'package:real_chat_app/logic/cubit/auth/auth_state.dart';
+import 'package:real_chat_app/presentation/home/home_screen.dart';
 import 'package:real_chat_app/presentation/screens/auth/sign_up_screen.dart';
 import 'package:real_chat_app/router/app_router.dart';
+
+import '../../../logic/cubit/auth/auth_cubit.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -49,134 +55,173 @@ class _LoginScreenState extends State<LoginScreen> {
     return null;
   }
 
+  //handle login
+  void handleLogin() {
+    if (_formKey.currentState!.validate()) {
+      try {
+        getIt<AuthCubit>().login(
+            email: _emailController.text, password: _passwordController.text);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              e.toString(),
+            ),
+          ),
+        );
+      }
+    } else {
+      debugPrint("Form validation failed");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-          child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.screenWidth * 0.05),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //30
-                  SizedBox(height: SizeConfig.screenHeight * 0.055),
+    return BlocListener<AuthCubit, AuthState>(
+      bloc: getIt<AuthCubit>(),
+      listenWhen: (previous, current) {
+        return previous.status != current.status ||
+            previous.errorMsg != current.errorMsg;
+      },
+      listener: (context, state) {
+                if (state.status == AuthStatus.authenticatedState) {
+          getIt<AppRouter>().pushAndRemoveUntil(const HomeScreen());
+        }
 
-                  //Welcome Text
-                  Text("Welcome Back",
-                      style:
-                          Theme.of(context).textTheme.headlineMedium!.copyWith(
-                                fontWeight: FontWeight.bold,
-                              )),
-                  //10
-                  SizedBox(height: SizeConfig.screenHeight * 0.01),
+        if(state.status==AuthStatus.errorState){
+             ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+            "Login failed", style: TextStyle(color: Colors.black),
+            ),
+          ),
+        );
+        }
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+            },
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.screenWidth * 0.05),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    //30
+                    SizedBox(height: SizeConfig.screenHeight * 0.055),
 
-                  //Continue text
-                  Text(
-                    "Sign in to continue",
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                  ),
-
-                  //30
-                  SizedBox(height: SizeConfig.screenHeight * 0.035),
-
-                  //Custom TextField for Email
-                  CustomTextfield(
-                      prefexIcon: const Icon(Icons.email_outlined),
-                      controller: _emailController,
-                      hintText: "Email",
-                      focusNode: _emailFocus,
-                      keyBoardType: TextInputType.text,
-                      validator: _emailValidator),
-
-                  //17
-                  SizedBox(height: SizeConfig.screenHeight * 0.02),
-
-                  //Custom Textfiled for password
-                  CustomTextfield(
-                      isPassword: true,
-                      sufixIcon: const Icon(Icons.visibility),
-                      prefexIcon: const Icon(Icons.lock_outline),
-                      controller: _passwordController,
-                      hintText: "Password",
-                      focusNode: _passwordFocus,
-                      keyBoardType: TextInputType.text,
-                      validator: _passwordValidator),
-
-                  //17
-                  SizedBox(height: SizeConfig.screenHeight * 0.03),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      RichText(
-                        text: TextSpan(
-                          recognizer: TapGestureRecognizer()..onTap=(){
-
-                          },
-                          text: "Forgot Password?",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: SizeConfig.screenHeight * 0.03),
-
-                  //Login Button
-                  CustomButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          debugPrint("Login Sucess");
-                        }
-                        FocusScope.of(context).unfocus();
-                      },
-                      text: "Login"),
-
-                  SizedBox(height: SizeConfig.screenHeight * 0.04),
-
-                  //Signup text buttoon
-                  Center(
-                    child: RichText(
-                      text: TextSpan(
-                        text: "Don't have an account? ",
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: Theme.of(context).colorScheme.secondary,
+                    //Welcome Text
+                    Text("Welcome Back",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium!
+                            .copyWith(
                               fontWeight: FontWeight.bold,
-                            ),
-                        children: [
-                          TextSpan(
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                getIt<AppRouter>().push(
-                                  const SignUpScreen(),
-                                );
-                              },
-                            text: "Sign Up",
+                            )),
+                    //10
+                    SizedBox(height: SizeConfig.screenHeight * 0.01),
+
+                    //Continue text
+                    Text(
+                      "Sign in to continue",
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                    ),
+
+                    //30
+                    SizedBox(height: SizeConfig.screenHeight * 0.035),
+
+                    //Custom TextField for Email
+                    CustomTextfield(
+                        prefexIcon: const Icon(Icons.email_outlined),
+                        controller: _emailController,
+                        hintText: "Email",
+                        focusNode: _emailFocus,
+                        keyBoardType: TextInputType.text,
+                        validator: _emailValidator),
+
+                    //17
+                    SizedBox(height: SizeConfig.screenHeight * 0.02),
+
+                    //Custom Textfiled for password
+                    CustomTextfield(
+                        isPassword: true,
+                        sufixIcon: const Icon(Icons.visibility),
+                        prefexIcon: const Icon(Icons.lock_outline),
+                        controller: _passwordController,
+                        hintText: "Password",
+                        focusNode: _passwordFocus,
+                        keyBoardType: TextInputType.text,
+                        validator: _passwordValidator),
+
+                    //17
+                    SizedBox(height: SizeConfig.screenHeight * 0.03),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            recognizer: TapGestureRecognizer()..onTap = () {},
+                            text: "Forgot Password?",
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium!
                                 .copyWith(
                                   color: Theme.of(context).colorScheme.primary,
-                                  fontWeight: FontWeight.bold,
                                 ),
-                          )
-                        ],
-                      ),
+                          ),
+                        ),
+                      ],
                     ),
-                  )
-                ],
+                    SizedBox(height: SizeConfig.screenHeight * 0.03),
+
+                    //Login Button
+                    CustomButton(onPressed: handleLogin, text: "Login"),
+
+                    SizedBox(height: SizeConfig.screenHeight * 0.04),
+
+                    //Signup text buttoon
+                    Center(
+                      child: RichText(
+                        text: TextSpan(
+                          text: "Don't have an account? ",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(
+                                color: Theme.of(context).colorScheme.secondary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                          children: [
+                            TextSpan(
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  getIt<AppRouter>().push(
+                                    const SignUpScreen(),
+                                  );
+                                },
+                              text: "Sign Up",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

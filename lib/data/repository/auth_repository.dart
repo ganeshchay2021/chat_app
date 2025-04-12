@@ -1,10 +1,14 @@
 import 'dart:developer';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:real_chat_app/data/services/database_method.dart';
 
 import '../model/user_model.dart';
 import '../services/base_repository.dart';
 
 class AuthRepository extends BaseRepository {
+
+    Stream<User?> get authStateChange => auth.authStateChanges();
+
   //create user of user signup
   Future<UserModel> signUp({
     required String fullName,
@@ -54,6 +58,15 @@ class AuthRepository extends BaseRepository {
     } catch (e) {
       log(e.toString());
       rethrow;
+    }
+  }
+
+  //sign out
+  Future<void> signOut()async{
+    try{
+      await auth.signOut();
+    }catch(e){
+      log(e.toString());
     }
   }
 }
